@@ -1,3 +1,5 @@
+<img src="./imgs/from scratch.jpg">
+
 # Neural Network from Scratch
 
 > Yeah, you read that right. I do this from scratch. In this documentation, I'm going to build a tiny neural network in pure Python. No libraries. No shortcuts. No TensorFlow. No PyTorch. **Just me and math.**
