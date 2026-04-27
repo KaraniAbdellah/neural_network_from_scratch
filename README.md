@@ -1,8 +1,8 @@
-<img src="./imgs/from scratch.jpg">
+<img src="./imgs/start.jpg">
 
 # Neural Network from Scratch
 
-> Yeah, you read that right. I do this from scratch. In this documentation, I'm going to build a tiny neural network in pure Python. No libraries. No shortcuts. No TensorFlow. No PyTorch. **Just me and math.**
+> Yeah, you read that right. I'm doing this from scratch. In this documentation, I'm going to build a tiny neural network in pure Python — no libraries, no shortcuts, no TensorFlow, no PyTorch. **Just me and math.**
 
 ---
 
@@ -17,10 +17,10 @@ Before we start, you should know:
 
 ## Table of Contents
 
-1. [Neural Network Architecture](#neural-network-architecture)
-2. [Some Important Concepts](#some-important-concepts)
-3. [Our Case with the MNIST Dataset](#our-case-with-the-mnist-dataset)
-4. [Coding Part](#full-code-listing)
+1. [Neural Network Architecture](#1-neural-network-architecture)
+2. [Some Important Concepts](#2-some-important-concepts)
+3. [Our Case with the MNIST Dataset](#3-our-case-with-the-mnist-dataset)
+4. [Coding Part](#4-coding-part)
 
 ---
 
@@ -28,7 +28,7 @@ Before we start, you should know:
 
 A neural network is a model that tries to simulate how the human brain works. In the human brain, we have something called a **neuron**.
 
-> **By the way** — a neuron is a COMPLEX FUNCTION. This function can learn new patterns.
+> **By the way** — a neuron is a complex function that can learn new patterns.
 
 This network contains three layers:
 
@@ -36,14 +36,14 @@ This network contains three layers:
 |---|---|
 | **Input Layer** | Accepts the raw inputs (numbers, images, audio) |
 | **Hidden Layer** | Learns patterns from the data |
-| **Output Layer** | Produces the prediction (temperature) or classification(cat/dog) |
+| **Output Layer** | Produces the prediction (e.g. temperature) or classification (e.g. cat/dog) |
 
 <img src="./imgs/neural_network.png" width="650" alt="Neural Network Diagram" />
 
 ### The Three Layers Explained
 
 **Input Layer**
-The layer that accepts inputs — for example, temperature, image, or audio. But all these inputs are numbers.
+The layer that accepts inputs — for example, temperature, image, or audio. All inputs are represented as numbers.
 
 **Hidden Layer**
 The layer that learns from the data.
@@ -57,7 +57,7 @@ The output depends on what we want to predict. For example:
 
 ## 2. Some Important Concepts
 
-### How many neurons in each layer?
+### How Many Neurons in Each Layer?
 
 **Input Layer**
 
@@ -67,35 +67,33 @@ It depends on the inputs. If it's an image, the number of neurons equals the ima
 
 There's no strict rule here, but keep this in mind:
 
-> More hidden layers is better than more neurons in one hidden layer. As Internet said 1–2 layers solve most common problems.
+> More hidden layers is generally better than more neurons in a single hidden layer. As a rule of thumb, 1–2 layers solve most common problems.
 
 **Output Layer**
 
-It depends on what we want in output. For example, if we're classifying 10 digits (0–9), we need 10 output neurons. etc...
-
-
-### Activation Functions
-
-In broad terms, activation functions are necessary to prevent linearity. Without them, the data would pass through the nodes and layers of the network only going through linear functions (a*x+b). The composition of these linear functions is again a linear function and so no matter how many layers the data goes through, the output is always the result of a linear function. An example is explained in the diagram below.
-
-<img src="./imgs/activation_function.png">
-
-An example showing the benefits of nonlinear functions for fitting data models.
-
-
-<img src="./imgs/benfit_of_activation_function.png">
-
-FROM: https://towardsdatascience.com/the-importance-and-reasoning-behind-activation-functions-4dc00e74db41/
+It depends on what we want to output. For example, if we're classifying 10 digits (0–9), we need 10 output neurons.
 
 ---
 
-#### ReLU — Activation Function 
+### Activation Functions
+
+Activation functions are necessary to prevent linearity. Without them, data would pass through the layers only through linear functions of the form $a \cdot x + b$. The composition of linear functions is still linear, so no matter how many layers the data goes through, the output would always be a linear function — which severely limits what the network can learn.
+
+<img src="./imgs/activation_function.png" alt="Activation Function Diagram" />
+
+An example showing the benefits of nonlinear functions for fitting data models:
+
+<img src="./imgs/benfit_of_activation_function.png" alt="Benefit of Activation Functions" />
+
+> Source: https://towardsdatascience.com/the-importance-and-reasoning-behind-activation-functions-4dc00e74db41/
+
+---
+
+#### ReLU — Activation Function
 
 For the hidden layer, we use **ReLU (Rectified Linear Unit)**:
 
-$$
-f(x) = \max(0, x)
-$$
+$$f(x) = \max(0, x)$$
 
 <img src="./imgs/relu.jpg" width="500" alt="ReLU Activation Function" />
 
@@ -103,10 +101,10 @@ $$
 
 | Condition | Output |
 |---|---|
-| x > 0 | f(x) = x |
-| x ≤ 0 | f(x) = 0 |
+| $x > 0$ | $f(x) = x$ |
+| $x \leq 0$ | $f(x) = 0$ |
 
-Simple idea: if the value is negative, kill it means return 0. If it's positive, keep it. means return it.
+Simple idea: if the value is negative, kill it (return 0). If it's positive, keep it (return it as-is).
 
 ---
 
@@ -114,201 +112,164 @@ Simple idea: if the value is negative, kill it means return 0. If it's positive,
 
 For the output layer, we use **Softmax**:
 
-$$
-\text{Softmax}(x_i) = \frac{e^{x_i}}{\sum_{j} e^{x_j}}
-$$
+$$\text{Softmax}(x_i) = \frac{e^{x_i}}{\sum_{j} e^{x_j}}$$
 
 <img src="./imgs/softmax.png" width="500" alt="Softmax Activation Function" />
 
-Softmax turns the output into **probabilities** — every output value is between 0 and 1, and they all add up to 1. This makes it perfect for classification.
+Softmax turns the output into **probabilities** — every output value is between 0 and 1, and they all add up to 1. This makes it perfect for classification tasks.
+
+> **Note:** We apply **ReLU** to each neuron in the hidden layer, and **Softmax** to each neuron in the output layer.
 
 ---
 
-> **NOTE:** We apply **ReLU** to each neuron in the hidden layer, and **Softmax** to each neuron in the output layer.
+### Cross-Entropy Loss Function
 
----
+The cross-entropy loss function measures how close a model's predictions are to the correct answers in **classification** problems.
 
-### Cross Entropy Loss Function
-is function mesure how close a model’s predictions are to the correct answers in **classification** problems.
+Depending on the problem, there are different types of cross-entropy:
 
-and Dependin in Problem There a Type of Cross Entropy Function:
+#### Binary Cross-Entropy Loss
 
-#### Binary Cross-Entropy Loss 
-is a widely used loss function in binary classification problems. For a dataset with N instances, the Binary Cross-Entropy Loss is calculated as:
+Used in binary classification problems. For a dataset with $N$ instances:
 
-$$
-\text{BCE} = -\frac{1}{N} \sum_{i=1}^{N} \left( y_i \cdot \log(p_i) + (1 - y_i)\log(1 - p_i) \right)
-$$
+$$\text{BCE} = -\frac{1}{N} \sum_{i=1}^{N} \left( y_i \cdot \log(p_i) + (1 - y_i) \cdot \log(1 - p_i) \right)$$
 
-#### Multiclass Cross Entropy Loss
-as categorical cross-entropy or softmax loss is a widely used loss function for training models in multiclass classification problems. For a dataset with N instances, Multiclass Cross-Entropy Loss is calculated as
+#### Multiclass Cross-Entropy Loss
 
-$$
-\text{CE} = -\frac{1}{N} \sum_{i=1}^{N} \sum_{j=1}^{C} \left( y_{i,j} \cdot \log(p_{i,j}) \right)
-$$
+Also known as categorical cross-entropy or softmax loss. Used for multiclass classification problems. For a dataset with $N$ instances and $C$ classes:
+
+$$\text{CE} = -\frac{1}{N} \sum_{i=1}^{N} \sum_{j=1}^{C} y_{i,j} \cdot \log(p_{i,j})$$
 
 #### Where:
 
-- **N**: number of samples
-- **C**: number of classes  
-- **y_{i,j}**: equals 1 if class *j* is the correct label for sample *i*, otherwise 0  
-- **p_{i,j}**: model-predicted probability that sample *i* belongs to class *j*  
+| Symbol | Meaning |
+|--------|---------|
+| $N$ | Number of samples |
+| $C$ | Number of classes |
+| $y_{i,j}$ | 1 if class $j$ is the correct label for sample $i$, otherwise 0 |
+| $p_{i,j}$ | Model-predicted probability that sample $i$ belongs to class $j$ |
 
-> In Forward Padd We Gonna use this Function to See Prediction of Our model and Then Calculate Accuracy.
+> In the forward pass, we use this function to evaluate the model's predictions and calculate accuracy.
 
-
-GOOD RESSOURCE: https://www.geeksforgeeks.org/machine-learning/what-is-cross-entropy-loss-function/
-
-
-## Some Here
-### Our Architecture
-
-For this project, we're going to use:
-
-```
-Input Layer  →  Hidden Layer  →  Output Layer
-```
-
-<img src="./imgs/neural_network1.png" width="650" alt="Our Architecture" />
+**Good resource:** https://www.geeksforgeeks.org/machine-learning/what-is-cross-entropy-loss-function/
 
 ---
 
 ## 3. Our Case with the MNIST Dataset
-MNIST is dataset that contain image 28×28 pixel images (784 features) and in Simple way our goal if to build a model that can accept an input and try to see it this image any number is it (0 or 1 or .... 9).
-So bassilcy we are in front Classification project where we have 10 classes (digits 0-9).
 
-Let's Talk about strcuture of our Neural and some mathetimcal formula that we gonna use:
+MNIST is a dataset containing 28×28 pixel images (784 features). Our goal is to build a model that accepts an image as input and classifies which digit it represents (0 through 9). This is a classification problem with 10 classes.
 
-### Neurons Architect:
-as you see archiect we have Input layer that accept ten 784 neurons means 784 features it is 28 x 28.
-and We Have Hidden Layer that Contain 10 Neurons (Number of Neurons Choose Randommly).
-We Have OutPut Layer That Contain 10 neurons wich means 10 classes that we gonna predict.
+### Neuron Architecture
 
-<img src="./imgs/minst_neural_network.jpg" />
-### Forward Propagation + Backward Propagation
+As shown in the architecture diagram:
+- **Input Layer**: 784 neurons (one per pixel, since 28 × 28 = 784)
+- **Hidden Layer**: 10 neurons (chosen arbitrarily)
+- **Output Layer**: 10 neurons (one per digit class, 0–9)
 
-
-### Forward propagation
-Forward propagation is the process where we compute activations layer by layer using current weights and biases. These values are later used in backward propagation to update the parameters of the network.
-
-Before we start, let's look at the dimensions of the weights and biases in each layer.
+<img src="./imgs/minst_neural_network.jpg" alt="MNIST Neural Network Architecture" />
 
 ---
 
-### Input Layer
-( A^{[0]} = X )  
-Shape: ( 784 × m )
+### Forward Propagation
+
+Forward propagation is the process where we compute activations layer by layer using the current weights and biases. These values are later used in backward propagation to update the network's parameters.
+
+Let's look at the dimensions of the weights and biases in each layer:
+
+**Input Layer**
+
+$$A^{[0]} = X \quad \text{Shape: } (784 \times m)$$
+
+**Layer 1 (Hidden Layer)**
+
+$$Z^{[1]} = W^{[1]} A^{[0]} + b^{[1]} \quad \text{Shape: } (10 \times m)$$
+
+$$A^{[1]} = g(Z^{[1]}) \quad \text{Shape: } (10 \times m)$$
+
+$$W^{[1]} \text{ Shape: } (10 \times 784), \quad b^{[1]} \text{ Shape: } (10 \times 1)$$
+
+**Layer 2 (Output Layer)**
+
+$$Z^{[2]} = W^{[2]} A^{[1]} + b^{[2]} \quad \text{Shape: } (10 \times m)$$
+
+$$A^{[2]} = g(Z^{[2]}) \quad \text{Shape: } (10 \times m)$$
+
+$$W^{[2]} \text{ Shape: } (10 \times 10), \quad b^{[2]} \text{ Shape: } (10 \times 1)$$
 
 ---
 
-### Layer 1
-( Z^{[1]} = W^{[1]} A^{[0]} + b^{[1]} )  
-Shape: ( 10 × m )
+### Backward Propagation
 
-( A^{[1]} = g(Z^{[1]}) )  
-Shape: ( 10 × m )
+After forward propagation, we measure the error using the multiclass cross-entropy loss function. Here are the formulas used to update the weights and biases:
 
-( W^{[1]} )  
-Shape: ( 10 × 784 )
+**Layer 2 (Output Layer Gradients)**
 
-( b^{[1]} )  
-Shape: ( 10 × 1 )
+$$dZ^{[2]} = A^{[2]} - Y$$
 
----
+$$dW^{[2]} = \frac{1}{m} \, dZ^{[2]} \, A^{[1]T}$$
 
-### Layer 2
-( Z^{[2]} = W^{[2]} A^{[1]} + b^{[2]} )  
-Shape: ( 10 × m )
+$$db^{[2]} = \frac{1}{m} \sum dZ^{[2]}$$
 
-( A^{[2]} = g(Z^{[2]}) )  
-Shape: ( 10 × m )
+**Layer 1 (Hidden Layer Gradients)**
 
-( W^{[2]} )  
-Shape: ( 10 × 10 )
+$$dZ^{[1]} = W^{[2]T} \, dZ^{[2]} \cdot g'^{[1]}(Z^{[1]})$$
 
-( b^{[2]} )  
-Shape: ( 10 × 1 )
+$$dW^{[1]} = \frac{1}{m} \, dZ^{[1]} \, A^{[0]T}$$
 
+$$db^{[1]} = \frac{1}{m} \sum dZ^{[1]}$$
 
-### BackWard Propagation
-After Forward Propagation We Need to Mesure The Error Using Cross Entropy Function for MultiClassification As We Mentionned Later.
-
-So Here the Formula That I used to update the weights and bias.
-### Layer 2 (Output Layer Gradients)
-
-( dZ^{[2]} = A^{[2]} - Y )
-
-( dW^{[2]} = \frac{1}{m} dZ^{[2]} A^{[1]T} )
-
-( db^{[2]} = \frac{1}{m} \sum dZ^{[2]} )
+> **Note:** These formulas are derived from gradient descent. You can derive them yourself using the chain rule.
 
 ---
 
-### Layer 1 (Hidden Layer Gradients)
+### Update Parameters
 
-( dZ^{[1]} = W^{[2]T} dZ^{[2]} \cdot g'^{[1]}(Z^{[1]}) )
+After computing gradients, we update the parameters using gradient descent:
 
-( dW^{[1]} = \frac{1}{m} dZ^{[1]} A^{[0]T} )
+**Layer 2**
 
-( db^{[1]} = \frac{1}{m} \sum dZ^{[1]} )
+$$W^{[2]} := W^{[2]} - \alpha \, dW^{[2]}$$
 
+$$b^{[2]} := b^{[2]} - \alpha \, db^{[2]}$$
 
-**NOTE: In This Doc I am Demeontrate Where We Get This Forumal But You Can Do it Using The Gradient Decdent**
+**Layer 1**
 
+$$W^{[1]} := W^{[1]} - \alpha \, dW^{[1]}$$
 
-### Update Params
-### Gradient Descent Parameter Update
-
-After computing gradients using backpropagation, we update the parameters using gradient descent.
-
----
-
-### Layer 2
-( W^{[2]} := W^{[2]} - \alpha dW^{[2]} )
-
-( b^{[2]} := b^{[2]} - \alpha db^{[2]} )
+$$b^{[1]} := b^{[1]} - \alpha \, db^{[1]}$$
 
 ---
 
-### Layer 1
-( W^{[1]} := W^{[1]} - \alpha dW^{[1]} )
+## 4. Coding Part
 
-( b^{[1]} := b^{[1]} - \alpha db^{[1]} )
-
-
-So This How i do it. Let's Dive Into Coding Part and Try to Discribe Each Function Why Did do.
-
-## 3. Coding Part
-# Neural Network Functions Overview
-
-## Summary Table
+### Function Overview
 
 | Function | Purpose | Input | Output |
-|----------|--------|-------|--------|
-| `init_param()` | Initializes weights and biases randomly for the neural network | None | `W_1, B_1, W_2, B_2` |
+|----------|---------|-------|--------|
+| `init_param()` | Initializes weights and biases randomly | None | `W_1, B_1, W_2, B_2` |
 | `ReLU(Z)` | Applies ReLU activation (sets negative values to 0) | `Z` | Activated matrix |
-| `softMaX(Z)` | Converts raw scores into probability distribution | `Z` | Probability matrix |
+| `softmax(Z)` | Converts raw scores into a probability distribution | `Z` | Probability matrix |
 | `forward_prop(W_1, B_1, W_2, B_2, X)` | Performs forward propagation through the network | Weights, biases, input `X` | `Z_1, A_1, Z_2, A_2` |
-| `on_hot_code(Y)` | Converts labels into one-hot encoded vectors | Labels `Y` | One-hot matrix |
-| `ReLU_deriv(Z)` | Computes derivative of ReLU for backpropagation | `Z` | Gradient mask (0 or 1) |
+| `one_hot_encode(Y)` | Converts labels into one-hot encoded vectors | Labels `Y` | One-hot matrix |
+| `ReLU_deriv(Z)` | Computes the derivative of ReLU for backpropagation | `Z` | Gradient mask (0 or 1) |
 | `backward_prop(Z_1, A_1, Z_2, A_2, W_1, W_2, X, Y)` | Computes gradients using backpropagation | Forward cache + weights + input + labels | `dW_1, dB_1, dW_2, dB_2` |
 | `update_params(W_1, W_2, B_1, B_2, dW_1, dW_2, dB_1, dB_2, alpha)` | Updates parameters using gradient descent | Weights, biases, gradients, learning rate | Updated `W_1, B_1, W_2, B_2` |
 
 ---
 
-## Training Flow (Pipeline)
+### Training Pipeline
 
 | Step | Process |
-|------|--------|
+|------|---------|
 | 1 | Initialize parameters (`init_param`) |
 | 2 | Forward propagation (`forward_prop`) |
-| 3 | Compute loss (not shown in code) |
+| 3 | Compute loss |
 | 4 | Backward propagation (`backward_prop`) |
 | 5 | Update parameters (`update_params`) |
 | 6 | Repeat for multiple iterations |
 
+---
 
-## Controbution
-Please If You find the Documentation Not Good or Soemthing You can contribte it and you can use this model and deploy why not.
+## Contributing
 
-
+If you find anything in this documentation that is unclear or incorrect, feel free to contribute. You're also welcome to use this model and deploy it!
