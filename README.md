@@ -198,6 +198,8 @@ $$W^{[2]} \text{ Shape: } (10 \times 10), \quad b^{[2]} \text{ Shape: } (10 \tim
 
 ---
 
+where m is number of inputs. can be 1000 images ...
+
 ### Backward Propagation
 
 After forward propagation, we measure the error using the multiclass cross-entropy loss function. Here are the formulas used to update the weights and biases:
@@ -273,3 +275,9 @@ $$b^{[1]} := b^{[1]} - \alpha \, db^{[1]}$$
 ## Contributing
 
 If you find anything in this documentation that is unclear or incorrect, feel free to contribute. You're also welcome to use this model and deploy it!
+
+
+**Built with Love By <a href="https://www.linkedin.com/in/abdellah-karani-965928294/">Abdellah Karani</a>
+**
+
+
